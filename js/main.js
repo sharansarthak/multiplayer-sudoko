@@ -89,6 +89,8 @@ function fillNumber(event) {
 document.querySelectorAll('.number').forEach((numberElement) => {
   numberElement.addEventListener('click', fillNumber);
 });
+
+//Changing player which they end their turn
 function togglePlayer() {
   const timerElement1 = document.getElementById("player1-timer");
   const timerElement2 = document.getElementById("player2-timer");
