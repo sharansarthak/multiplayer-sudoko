@@ -185,6 +185,11 @@ body {
     cursor: pointer;
     font-weight: 400;
 }
+.selected-number {
+  background-color: #4CAF50; /* Example: Green background */
+  color: white; /* Example: White text */
+  /* Add other styling as needed */
+}
 
 .number:hover {
     background-color: #2ecc71;

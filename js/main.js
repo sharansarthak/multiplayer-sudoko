@@ -99,10 +99,21 @@ function fillNumber(event) {
     selectedCell.classList.add('selected-number');
   }
 }
-// Add click events to the number buttons
+let selectedNumberElement = null; // To keep track of the selected number element
+
 document.querySelectorAll('.number').forEach((numberElement) => {
-  numberElement.addEventListener('click', fillNumber);
+    numberElement.addEventListener('click', () => {
+        // Remove highlighting from previously selected number
+        if (selectedNumberElement) {
+            selectedNumberElement.classList.remove('selected-number');
+        }
+
+        selectedNumber = parseInt(numberElement.textContent); // Update the selected number
+        selectedNumberElement = numberElement; // Update the selected number element
+        selectedNumberElement.classList.add('selected-number'); // Highlight the selected number
+    });
 });
+
 
 //Changing player which they end their turn
 function togglePlayer() {
