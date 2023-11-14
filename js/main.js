@@ -8,54 +8,58 @@
  * refactored to use multiple JavaScript files for better modularity and readability.
  */
 
-const cells = document.querySelectorAll('.sudoku-cell');
-let selectedCell = null; // To keep track of which cell is selected
+import { canPlaceNumber, generateSudokuPuzzle } from "./board.js";
 
-// Sample Sudoku board, replace with your own numbers
-const sampleBoard = [
-  5, 3, 0, 0, 7, 0, 0, 0, 0,
-  6, 0, 0, 1, 9, 5, 0, 0, 0,
-  0, 9, 8, 0, 0, 0, 0, 6, 0,
-  8, 0, 0, 0, 6, 0, 0, 0, 3,
-  4, 0, 0, 8, 0, 3, 0, 0, 1,
-  7, 0, 0, 0, 2, 0, 0, 0, 6,
-  0, 6, 0, 0, 0, 0, 2, 8, 0,
-  0, 0, 0, 4, 1, 9, 0, 0, 5,
-  0, 0, 0, 0, 8, 0, 0, 7, 9
-];
+const cells = document.querySelectorAll('.sudoku-cell');
+let selectedCell = null;
+let selectedNumber = null; // Variable to keep track of the selected number
+let gridState; // To keep track of the current Sudoku grid state
+
 
 // Initialize the game grid dynamically
-const initGameGrid = () => {
+const initGameGrid = (puzzle) => {
   const gridContainer = document.getElementById('main-sudoku-grid');
+  gridContainer.innerHTML = ''; // Clear existing cells if any
 
-  for (let i = 0; i < 81; i++) {
+  puzzle.forEach((row, rowIndex) => {
+    row.forEach((value, colIndex) => {
       const cell = document.createElement('div');
       cell.classList.add('sudoku-cell');
-
-      // Pre-fill cell with sampleBoard values
-      if (sampleBoard[i] !== 0) {
-          cell.textContent = sampleBoard[i];
+      
+      if (value !== 0) {
+          cell.textContent = value;
+          cell.classList.add('fixed'); // Mark the cell as fixed
       }
 
-      const row = Math.floor(i / 9);
-      const col = i % 9;
-
-      if (row === 2 || row === 5) {
-          cell.style.marginBottom = '10px';
-      }
-      if (col === 2 || col === 5) {
-          cell.style.marginRight = '10px';
-      }
+      // Styling for visual separation of Sudoku blocks
+      if (rowIndex % 3 === 2) cell.style.marginBottom = '10px';
+      if (colIndex % 3 === 2) cell.style.marginRight = '10px';
+      
       cell.addEventListener('click', function() {
-        this.classList.toggle('highlighted-cell');
-      });
-      gridContainer.appendChild(cell);
-      gridContainer.addEventListener('click', function(event) {
-        if (event.target.classList.contains('sudoku-cell')) {
-          selectedCell = event.target; // Set the selected cell
+        if (!this.classList.contains('fixed')) {
+            if (selectedCell) {
+                selectedCell.classList.remove('highlighted-cell');
+            }
+            selectedCell = this;
+            selectedCell.classList.add('highlighted-cell');
+
+            if (selectedNumber !== null) {
+                if (canPlaceNumber(gridState, rowIndex, colIndex, selectedNumber)) {
+                    this.textContent = selectedNumber;
+                    gridState[rowIndex][colIndex] = selectedNumber;
+                } else {
+                    console.log("Invalid move!");
+                }
+            }
         }
-      });
-  }
+    });
+    
+
+    gridContainer.appendChild(cell);;
+    });
+  });
+  gridState = puzzle.map(row => row.slice()); // Clone the puzzle array
+
 };
 let currentPlayer = "player1";
 let interval1, interval2;
@@ -92,7 +96,7 @@ function startTimer(playerId, remainingTime) {
 function fillNumber(event) {
   if (selectedCell) {
     selectedCell.textContent = event.target.textContent;
-    selectedCell.classList.add('selected-number'); // Add class to change the color
+    selectedCell.classList.add('selected-number');
   }
 }
 // Add click events to the number buttons
@@ -123,13 +127,38 @@ function togglePlayer() {
 }
 
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", () => {
+  // Assuming a medium difficulty level for the generated puzzle
+  let generatedPuzzle = generateSudokuPuzzle(30); // You can adjust the difficulty level
+  
+  initGameGrid(generatedPuzzle); // Initialize the game grid with the generated puzzle
+
+  // Event listeners for starting the game and toggling players
   document.getElementById("start-game").addEventListener("click", function() {
     interval1 = startTimer("player1", time1);
   });
 
   document.getElementById("end-turn-player1").addEventListener("click", togglePlayer);
   document.getElementById("end-turn-player2").addEventListener("click", togglePlayer);
+  document.querySelectorAll('.number').forEach((numberElement) => {
+    numberElement.addEventListener('click', () => {
+        selectedNumber = parseInt(numberElement.textContent);
+    });
+});
+});
 
-  initGameGrid();
+document.querySelectorAll('.sudoku-cell').forEach((cell, index) => {
+  cell.addEventListener('click', () => {
+      const row = Math.floor(index / 9);
+      const col = index % 9;
+
+      // Check if the number can be placed
+      if (canPlaceNumber(grid, row, col, selectedCell)) {
+          cell.textContent = selectedCell;
+          grid[row][col] = selectedCell; // Update your grid state
+      } else {
+          // Handle invalid move (e.g., show alert or error message)
+          console.log("Invalid move!");
+      }
+  });
 });
