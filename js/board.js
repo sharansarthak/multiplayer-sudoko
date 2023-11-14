@@ -2,7 +2,8 @@ const GRID_SIZE = 9;
 const BOX_SIZE = 3;
 const UNASSIGNED = 0;
 const NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
+// Assume 'solutionGrid' is the complete solution grid that you generate and store when the game starts.
+let solutionGrid;
 const initializeEmptyGrid = (size) => {
     let grid = [];
     for (let i = 0; i < size; i++) {
@@ -89,12 +90,22 @@ const removeCells = (grid, level) => {
     }
 };
 
+const sudokuCreateAndStoreSolution = (grid) => {
+  sudokuCreate(grid);
+  solutionGrid = grid.map(row => [...row]);
+}
+
+export function isCorrectPlacement(grid, row, col, number) {
+  return solutionGrid[row][col] === number;
+}
+
 export function generateSudokuPuzzle(difficultyLevel) {
   let sudokuGrid = initializeEmptyGrid(GRID_SIZE);
-    sudokuCreate(sudokuGrid);
-    removeCells(sudokuGrid, difficultyLevel);
-    return sudokuGrid;
-};
+  sudokuCreateAndStoreSolution(sudokuGrid);
+  let puzzleGrid = sudokuGrid.map(row => [...row]); // Clone the grid
+  removeCells(puzzleGrid, difficultyLevel);
+  return puzzleGrid;
+}
 
 export function canPlaceNumber(grid, row, col, number){
   return isRowSafe(grid, row, number) &&

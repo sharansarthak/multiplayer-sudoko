@@ -8,12 +8,14 @@
  * refactored to use multiple JavaScript files for better modularity and readability.
  */
 
-import { canPlaceNumber, generateSudokuPuzzle } from "./board.js";
+import { canPlaceNumber, generateSudokuPuzzle, isCorrectPlacement } from "./board.js";
+import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore } from './player.js';
 
 const cells = document.querySelectorAll('.sudoku-cell');
 let selectedCell = null;
 let selectedNumber = null; // Variable to keep track of the selected number
 let gridState; // To keep track of the current Sudoku grid state
+let selectedNumberElement = null; // Keep track of the DOM element for the selected number
 
 
 // Initialize the game grid dynamically
@@ -35,32 +37,44 @@ const initGameGrid = (puzzle) => {
       if (rowIndex % 3 === 2) cell.style.marginBottom = '10px';
       if (colIndex % 3 === 2) cell.style.marginRight = '10px';
       
+      // Cell click event listener
       cell.addEventListener('click', function() {
+        // Check if the cell is not a fixed part of the puzzle
         if (!this.classList.contains('fixed')) {
+            // Remove highlighting from the previously selected cell
             if (selectedCell) {
                 selectedCell.classList.remove('highlighted-cell');
             }
+            // Highlight this cell
             selectedCell = this;
             selectedCell.classList.add('highlighted-cell');
 
+            // Place the selected number if it's valid
             if (selectedNumber !== null) {
                 if (canPlaceNumber(gridState, rowIndex, colIndex, selectedNumber)) {
                     this.textContent = selectedNumber;
                     gridState[rowIndex][colIndex] = selectedNumber;
+                    if (isCorrectPlacement(gridState, rowIndex, colIndex, selectedNumber)) {
+                      // Award points for correct placement
+                      console.log("Correct placement!");
+                  } else {
+                      // Maybe less points or a different action
+                      console.log("Valid move, but not the correct number for the solution.");
+                  }
                 } else {
                     console.log("Invalid move!");
                 }
             }
         }
-    });
-    
+      });
 
-    gridContainer.appendChild(cell);;
+      gridContainer.appendChild(cell);
     });
   });
-  gridState = puzzle.map(row => row.slice()); // Clone the puzzle array
-
+  // Update gridState to reflect the current state of the puzzle
+  gridState = puzzle.map(row => row.slice());
 };
+
 let currentPlayer = "player1";
 let interval1, interval2;
 let time1 = 600, time2 = 600;  // Initialize remaining time for both players
@@ -99,19 +113,16 @@ function fillNumber(event) {
     selectedCell.classList.add('selected-number');
   }
 }
-let selectedNumberElement = null; // To keep track of the selected number element
 
 document.querySelectorAll('.number').forEach((numberElement) => {
-    numberElement.addEventListener('click', () => {
-        // Remove highlighting from previously selected number
-        if (selectedNumberElement) {
-            selectedNumberElement.classList.remove('selected-number');
-        }
-
-        selectedNumber = parseInt(numberElement.textContent); // Update the selected number
-        selectedNumberElement = numberElement; // Update the selected number element
-        selectedNumberElement.classList.add('selected-number'); // Highlight the selected number
-    });
+  numberElement.addEventListener('click', () => {
+      if (selectedNumberElement) {
+          selectedNumberElement.classList.remove('selected-number');
+      }
+      selectedNumber = parseInt(numberElement.textContent);
+      selectedNumberElement = numberElement;
+      selectedNumberElement.classList.add('selected-number');
+  });
 });
 
 
@@ -139,37 +150,29 @@ function togglePlayer() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Assuming a medium difficulty level for the generated puzzle
-  let generatedPuzzle = generateSudokuPuzzle(30); // You can adjust the difficulty level
-  
-  initGameGrid(generatedPuzzle); // Initialize the game grid with the generated puzzle
+    let generatedPuzzle = generateSudokuPuzzle(30);
+    initializePlayers();
 
-  // Event listeners for starting the game and toggling players
-  document.getElementById("start-game").addEventListener("click", function() {
-    interval1 = startTimer("player1", time1);
-  });
+    initGameGrid(generatedPuzzle);
 
-  document.getElementById("end-turn-player1").addEventListener("click", togglePlayer);
-  document.getElementById("end-turn-player2").addEventListener("click", togglePlayer);
-  document.querySelectorAll('.number').forEach((numberElement) => {
-    numberElement.addEventListener('click', () => {
-        selectedNumber = parseInt(numberElement.textContent);
+    // Event listeners for starting the game and toggling players
+    document.getElementById("start-game").addEventListener("click", function() {
+        interval1 = startTimer("player1", time1);
     });
-});
-});
 
-document.querySelectorAll('.sudoku-cell').forEach((cell, index) => {
-  cell.addEventListener('click', () => {
-      const row = Math.floor(index / 9);
-      const col = index % 9;
+    document.getElementById("end-turn-player1").addEventListener("click", togglePlayer);
+    document.getElementById("end-turn-player2").addEventListener("click", togglePlayer);
 
-      // Check if the number can be placed
-      if (canPlaceNumber(grid, row, col, selectedCell)) {
-          cell.textContent = selectedCell;
-          grid[row][col] = selectedCell; // Update your grid state
-      } else {
-          // Handle invalid move (e.g., show alert or error message)
-          console.log("Invalid move!");
-      }
-  });
+    // Event listeners for number buttons
+    document.querySelectorAll('.number').forEach((numberElement) => {
+        numberElement.addEventListener('click', () => {
+            if (selectedNumberElement) {
+                selectedNumberElement.classList.remove('selected-number');
+            }
+            selectedNumber = parseInt(numberElement.textContent);
+            selectedNumberElement = numberElement;
+            selectedNumberElement.classList.add('selected-number');
+        });
+    });
+
 });
