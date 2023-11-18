@@ -4,52 +4,77 @@
  * It includes functionalities like toggling between players, managing player timers,
  * and handling player-specific animations and events.
  */
+let players = {
+  player1: { name: "Player 1", color: "blue", score: 0, timeId: null, timeRemaining: 600 },
+  player2: { name: "Player 2", color: "pink", score: 0, timeId: null, timeRemaining: 600 }
+};
 
-/**
- * Initializes player-specific settings and states.
- */
-function initPlayers() {
-    // TODO: Initialize player settings like names, avatars, etc.
+let currentPlayer = "player1";
+
+// Import timer functions from timer.js
+import { startTimer, stopTimer } from './timer.js';
+
+// Function to switch the current player
+function switchPlayer() {
+  currentPlayer = (currentPlayer === "player1") ? "player2" : "player1";
+}
+
+// Function to get  current player object
+function getCurrentPlayer() {
+  return players[currentPlayer];
+}
+
+// Function to initialize players
+function initializePlayers() {
+  players.player1.score = 0;
+  players.player2.score = 0;
+  players.player1.name = "Alice";
+  players.player2.name = "Bob";
+  players.player1.color = "blue";
+  players.player2.color = "pink";
+  players.player1.timeRemaining = 600; 
+  players.player2.timeRemaining = 600;
+}
+
+// Function to update the timer details for a player
+function updatePlayerTimer(playerKey, newTimerValue) {
+  if (players[playerKey]) {
+    // Update the timer with the new value
+    players[playerKey].timeRemaining = newTimerValue;
+
   }
-  
-  /**
-   * Toggles between Player 1 and Player 2.
-   */
-  function togglePlayer() {
-    // TODO: Switch the active player.
-    // TODO: Pause the timer of the inactive player and start the timer of the active player.
-    // TODO: Implement animations to indicate the active player.
+}
+
+// Function to update the score of a player
+function updateScore(playerKey, points) {
+  if (players[playerKey]) {
+    players[playerKey].score += points;
+    console.log(`${playerKey} score: ${players[playerKey].score}`);
+    // Optionally update the UI here
   }
-  
-  /**
-   * Updates the remaining time for a player.
-   * @param {String} playerId - The ID of the player ("player1" or "player2").
-   * @param {Number} time - Remaining time in seconds.
-   */
-  function updatePlayerTime(playerId, time) {
-    // TODO: Update the remaining time for the specified player.
+}
+
+// Function to get the score of a player
+function getPlayerScore(playerKey) {
+  return players[playerKey] ? players[playerKey].score : 0;
+}
+
+// Function to toggle between players, managing timers
+function togglePlayer() {
+  const timerElement1 = document.getElementById("player1-timer");
+  const timerElement2 = document.getElementById("player2-timer");
+
+
+   if (currentPlayer === "player1") {
+    stopTimer(players.player1.timeId); // Correctly stopping the current timer
+    switchPlayer();
+    players.player2.timeId = startTimer("player2", players.player2.timeRemaining); // Storing new interval ID
+  } else {
+    stopTimer(players.player2.timeId); // Correctly stopping the current timer
+    switchPlayer();
+    players.player1.timeId = startTimer("player1", players.player1.timeRemaining); // Storing new interval ID
   }
-  
-  /**
-   * Ends the turn for the current active player.
-   */
-  function endPlayerTurn() {
-    // TODO: End the current player's turn and switch to the other player.
-  }
-  
-  /**
-   * Displays a win animation for a player.
-   * @param {String} playerId - The ID of the player ("player1" or "player2").
-   */
-  function showWinAnimation(playerId) {
-    // TODO: Show a custom win animation for the specified player.
-  }
-  
-  /**
-   * Resets player states and settings.
-   */
-  function resetPlayers() {
-    // TODO: Reset all player-specific states to their initial settings.
-  }
-  
-  
+}
+
+// Exporting the necessary functions and variables
+export { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, getPlayerScore, updatePlayerTimer, players };

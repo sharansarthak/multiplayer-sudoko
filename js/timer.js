@@ -4,46 +4,41 @@
  * It includes setting up the timer, pausing, resuming, and resetting it, as well as executing actions when time runs out.
  */
 
+import { updatePlayerTimer } from "./player.js";
+
 /**
  * Initializes and starts the timer for a player.
  * @param {String} playerId - The ID of the player ("player1" or "player2").
  * @param {Number} initialTime - Initial time in seconds.
  */
-function startTimer(playerId, initialTime) {
-    // TODO: Initialize and start the timer for the specified player.
-  }
-  
-  /**
-   * Pauses the timer for a player.
-   * @param {String} playerId - The ID of the player ("player1" or "player2").
-   */
-  function pauseTimer(playerId) {
-    // TODO: Pause the timer for the specified player.
-  }
-  
-  /**
-   * Resumes the timer for a player.
-   * @param {String} playerId - The ID of the player ("player1" or "player2").
-   */
-  function resumeTimer(playerId) {
-    // TODO: Resume the timer for the specified player.
-  }
-  
-  /**
-   * Resets the timer for a player.
-   * @param {String} playerId - The ID of the player ("player1" or "player2").
-   */
-  function resetTimer(playerId) {
-    // TODO: Reset the timer for the specified player.
-  }
-  
-  /**
-   * Executes actions when a player's timer runs out.
-   * @param {String} playerId - The ID of the player ("player1" or "player2").
-   */
-  function timeOutActions(playerId) {
-    // TODO: Specify the actions to take when a player's timer runs out.
-    // E.g., triggering end game state, showing animations, etc.
-  }
-  
-  
+// timer.js
+function startTimer(playerId, remainingTime) {
+  let startTime = Date.now();
+  const timerElement = document.getElementById(`${playerId}-timer`);
+  let intervalId = setInterval(() => {
+      let elapsed = Math.floor((Date.now() - startTime) / 1000);
+      let remaining = remainingTime - elapsed;
+
+      updatePlayerTimer(playerId, remaining);
+
+      const minutes = Math.floor(remaining / 60);
+      const seconds = remaining % 60;
+      timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+      if (remaining <= 0) {
+          clearInterval(intervalId);
+          if (onTimeUp) onTimeUp(playerId); // Callback when time runs out
+      }
+  }, 1000); // Run the interval every second
+  console.log(`Starting timer for ${playerId}: Interval ID = ${intervalId}`);
+
+  return intervalId;
+}
+
+function stopTimer(intervalId) {
+  console.log(`Stopping timer: Interval ID = ${intervalId}`);
+
+  clearInterval(intervalId);
+}
+
+export { startTimer, stopTimer };

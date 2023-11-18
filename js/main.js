@@ -9,7 +9,8 @@
  */
 
 import { canPlaceNumber, generateSudokuPuzzle, isCorrectPlacement } from "./board.js";
-import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore } from './player.js';
+import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer } from './player.js';
+import { startTimer } from "./timer.js";
 
 const cells = document.querySelectorAll('.sudoku-cell');
 let selectedCell = null;
@@ -55,7 +56,7 @@ const initGameGrid = (puzzle) => {
                     this.textContent = selectedNumber;
                     gridState[rowIndex][colIndex] = selectedNumber;
                     if (isCorrectPlacement(gridState, rowIndex, colIndex, selectedNumber)) {
-                      // Award points for correct placement
+                      updateScore(currentPlayer, 100);
                       console.log("Correct placement!");
                   } else {
                       // Maybe less points or a different action
@@ -64,6 +65,7 @@ const initGameGrid = (puzzle) => {
                 } else {
                     console.log("Invalid move!");
                 }
+                togglePlayer();
             }
         }
       });
@@ -80,31 +82,7 @@ let interval1, interval2;
 let time1 = 600, time2 = 600;  // Initialize remaining time for both players
 let isFirstStart = true;  // Initialize a variable to track the first start
 
-function startTimer(playerId, remainingTime) {
-  let startTime = Date.now();
-  const timerElement = document.getElementById(`${playerId}-timer`);
-  
-  return setInterval(() => {
-    let elapsed = Math.floor((Date.now() - startTime) / 1000);
-    let remaining = remainingTime - elapsed;
-    
-    if (playerId === "player1") {
-      time1 = remaining;
-    } else {
-      time2 = remaining;
-    }
 
-    const minutes = Math.floor(remaining / 60);
-    const seconds = remaining % 60;
-    timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-    
-    if (remaining <= 0) {
-      clearInterval(interval1);
-      clearInterval(interval2);
-      // Handle what happens when time runs out
-    }
-  }, 100);
-}
 
 // Function to fill the selected cell with a number
 function fillNumber(event) {
@@ -124,29 +102,6 @@ document.querySelectorAll('.number').forEach((numberElement) => {
       selectedNumberElement.classList.add('selected-number');
   });
 });
-
-
-//Changing player which they end their turn
-function togglePlayer() {
-  const timerElement1 = document.getElementById("player1-timer");
-  const timerElement2 = document.getElementById("player2-timer");
-
-  if (currentPlayer === "player1") {
-    timerElement1.classList.remove('pulse-timer');
-    timerElement2.classList.add('pulse-timer');
-  
-    clearInterval(interval1);
-    currentPlayer = "player2";
-    interval2 = startTimer("player2", time2);
-  } else {
-    timerElement2.classList.remove('pulse-timer');
-    timerElement1.classList.add('pulse-timer');
-  
-    clearInterval(interval2);
-    currentPlayer = "player1";
-    interval1 = startTimer("player1", time1);
-  }
-}
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -176,3 +131,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
