@@ -67,3 +67,8 @@ To complete as much of the Sudoku board as possible within the allotted time (ho
 ### Custom Algorithms
 - Algorithm for calculating points based on the difficulty of the Sudoku entry
 - Timer algorithm for countdown and turn management
+
+## Acknowledgments
+
+Parts of the code were developed with assistance from ChatGPT, a conversational model. While the model provided valuable insights, the final implementation was done by me. 
+
