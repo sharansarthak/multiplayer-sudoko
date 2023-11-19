@@ -8,8 +8,9 @@
  * refactored to use multiple JavaScript files for better modularity and readability.
  */
 
-import { canPlaceNumber, generateSudokuPuzzle, isCorrectPlacement } from "./board.js";
-import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, currentPlayer } from './player.js';
+import { canPlaceNumber, generateSudokuPuzzle, isBoardSolved, isCorrectPlacement } from "./board.js";
+import { handleWin } from "./game.js";
+import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, currentPlayer, setPlayerNames, players } from './player.js';
 import { startTimer } from "./timer.js";
 
 const cells = document.querySelectorAll('.sudoku-cell');
@@ -64,20 +65,22 @@ const initGameGrid = (puzzle) => {
               } else {
                 updateScore(currentPlayer, 80);
                 selectedCell.classList.add('valid-but-incorrect');
-setTimeout(() => selectedCell.classList.remove('valid-but-incorrect'), 1000);
+                setTimeout(() => selectedCell.classList.remove('valid-but-incorrect'), 1000);
                 console.log("Valid move, but not the correct number for the solution.");
               }
             } else {
               updateScore(currentPlayer, -50);
               console.log("Invalid move!");
               selectedCell.classList.add('incorrect-move');
-setTimeout(() => selectedCell.classList.remove('incorrect-move'), 500);
+              setTimeout(() => selectedCell.classList.remove('incorrect-move'), 500);
+            }
+            if (isBoardSolved(gridState)) {
+              handleWin(getCurrentPlayer); // Handle the win scenario
             }
             togglePlayer();
           }
         }
       });
-
       gridContainer.appendChild(cell);
     });
   });
@@ -110,10 +113,27 @@ document.querySelectorAll('.number').forEach((numberElement) => {
   });
 });
 
+document.getElementById('start-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const playerName1 = document.getElementById('player1-name').value;
+  const playerName2 = document.getElementById('player2-name').value;
 
-document.addEventListener("DOMContentLoaded", () => {
-  let generatedPuzzle = generateSudokuPuzzle(30);
+  const difficulty = document.getElementById('difficulty').value;
+  // Initialize game with these values
+  // Hide initial form and show the Sudoku board
+  document.getElementById('initial-page').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'flex';
+  initializeGame(playerName1, playerName2, difficulty);
+
+});
+
+function initializeGame(playerName1, playerName2, difficulty){  
+  let generatedPuzzle = generateSudokuPuzzle(1);
   initializePlayers();
+  setPlayerNames(playerName1, playerName2);
+
+  document.getElementById('player1-name-display').textContent = players.player1.name || 'Player 1';
+  document.getElementById('player2-name-display').textContent = players.player2.name || 'Player 2';
 
   initGameGrid(generatedPuzzle);
 
@@ -137,5 +157,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-});
+};
 
+//score multiplier
+//have like pom pom on correct guesses
+//Keep track of numbers
+//disable buttons when not possible to use
+//Add number of mistakes, corrrect, and whatever

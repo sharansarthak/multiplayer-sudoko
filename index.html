@@ -16,18 +16,39 @@
         <h1>Multiplayer Sudoku</h1>
     </header>
 
-    <div class="full-screen">
-        <div class="game-screen">       
+    <div class = "full-screen">
+    <div id="initial-page">
+        <div class="welcome-message">
+          <h1>Welcome to Sudoku Battle!</h1>
+          <p>Prepare to challenge your mind in a battle of numbers.</p>
+        </div>
+        <form id="start-form">
+          <h2>Start Your Game</h2>
+          <input type="text" id="player1-name" placeholder="Player 1 Name">
+          <input type="text" id="player2-name" placeholder="Player 2 Name">
+          <select id="difficulty">
+            <option value="1">Easy</option>
+            <option value="2">Medium</option>
+            <option value="3">Hard</option>
+          </select>
+          <button type="submit">Begin Battle</button>
+        </form>
+      </div>
+
+      
+      
+          
+          
+        <div id= "game-screen" class="game-screen"  style="display: none;">       
          <!-- Player 1 Area (Left Side) -->
-        <section id="player1-area" class="player-area">
-            <h2>Player 1</h2>
+         <section id="player1-area" class="player-area">
+            <h2><span id="player1-name-display">Player 1</span></h2>
             <div id="player1-timer" class="timer">10:00</div>
             <div id="player1-score" class="scoreboard">
                 <div class="score-label">Score:</div>
                 <div id="player1-score-value" class="score-value">0</div>
             </div>
             <button class="control-button" id="end-turn-player1">End Turn</button>
-
         </section>
 
             <!-- Main game screen sudoko board-->       
@@ -46,7 +67,6 @@
                     <div class="number">7</div>
                     <div class="number">8</div>
                     <div class="number">9</div>
-                    <div class="delete" id="btn-delete">X</div>
                 </div>
 <!-- Control Buttons -->
 <section id="controls" class="centered">
@@ -66,16 +86,13 @@
 
         <!-- Player 2 Area (Right Side) -->
         <section id="player2-area" class="player-area">
-            <h2>Player 2</h2>
+            <h2><span id="player2-name-display">Player 1</span></h2>
             <div id="player2-timer" class="timer">10:00</div>
-
-          
             <div id="player2-score" class="scoreboard">
                 <div class="score-label">Score:</div>
                 <div id="player2-score-value" class="score-value">0</div>
             </div>
             <button class="control-button" id="end-turn-player2">End Turn</button>
-
         </section>
 
        

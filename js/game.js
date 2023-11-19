@@ -3,49 +3,41 @@
  * This file is the core of the multiplayer Sudoku game, responsible for managing the game state,
  * controlling game flow, checking win/lose conditions, and implementing custom algorithms and interactions.
  */
+export function handleWin(winningPlayer) {
+  console.log(winningPlayer)
+  // Display a personalized win message
+  showWinModal(`Amazing job, ${winningPlayer.name}! You've solved the puzzle!`);
 
-/**
- * Initializes the game with default or custom configurations.
- */
-function initGame() {
-    // TODO: Initialize the game board, players, timers, and other necessary elements.
+  // Animate the game board with a celebratory effect
+  const gameBoard = document.getElementById('main-sudoku-grid');
+  gameBoard.classList.add('win-animation');
+
+  // Trigger confetti or particle effects
+  triggerConfetti();
+}
+
+function triggerConfetti() {
+  const confettiContainer = document.createElement('div');
+  confettiContainer.className = 'confetti-container';
+
+  for (let i = 0; i < 10; i++) { // 10 pieces of confetti
+    const confettiPiece = document.createElement('div');
+    confettiPiece.className = 'confetti-piece';
+    confettiContainer.appendChild(confettiPiece);
   }
-  
-  /**
-   * Checks if the current board state is a winning state.
-   * @returns {Boolean} - True if the board is in a winning state, otherwise False.
-   */
-  function checkWinCondition() {
-    // TODO: Implement logic to check for winning board state.
-  }
-  
-  /**
-   * Handles the game logic when a player wins.
-   */
-  function onWin() {
-    // TODO: Implement what happens when a player wins. E.g., stopping timers, showing animations, etc.
-  }
-  
-  /**
-   * Handles custom animations in the game.
-   */
-  function handleCustomAnimations() {
-    // TODO: Implement custom animations to enhance the gameplay experience.
-  }
-  
-  /**
-   * Implements custom game algorithms.
-   */
-  function customAlgorithms() {
-    // TODO: Implement game-specific algorithms like score sorting, path-finding, etc.
-  }
-  
-  /**
-   * Manages state transitions in the game.
-   */
-  function manageStateTransitions() {
-    // TODO: Implement state transitions like from 'playing' to 'won', 'lost', 'paused', etc.
-  }
-  
-  // Additional functions for future iterations can be added here.
-  
+
+  document.body.appendChild(confettiContainer);
+
+  // Remove confetti after it falls
+  setTimeout(() => confettiContainer.remove(), 2000); // Duration should match longest confetti animation
+}
+
+function showWinModal(message) {
+  const modal = document.createElement('div');
+  modal.className = 'win-modal';
+  modal.innerHTML = `
+    <h2>${message}</h2>
+    <button onclick="restartGame()">Play Again</button>
+    <button onclick="returnToMainMenu()">Main Menu</button>`;
+  document.body.appendChild(modal);
+}

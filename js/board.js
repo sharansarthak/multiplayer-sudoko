@@ -56,6 +56,18 @@ const shuffleArray = (arr) => {
     return arr;
 };
 
+export function isBoardSolved(currentGrid) {
+    for (let row = 0; row < currentGrid.length; row++) {
+      for (let col = 0; col < currentGrid[row].length; col++) {
+        if (currentGrid[row][col] === 0 || currentGrid[row][col] !== solutionGrid[row][col]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  
+  
 const sudokuCreate = (grid) => {
     let unassignedPos = findUnassignedLocation(grid);
     if (!unassignedPos) {

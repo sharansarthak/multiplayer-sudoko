@@ -23,7 +23,6 @@ body {
     background: linear-gradient(to bottom right, #3494E6, #EC6EAD);
     margin: 0;
     padding: 0;
-    height: 100vh;
   }
   
 .full-screen {
@@ -91,12 +90,25 @@ body {
     justify-content: space-between; /* Spacing out the main areas */
   }
   
-  /* Adjustments to ensure the main game area takes up most of the space */
-  .main-game {
-    flex-grow: 1; /* Allows the main game area to grow and take available space */
-    margin: 0 10px; /* Add margin for spacing */
+  
+  
+  #player1-name-display, #player2-name-display {
+    display: block;
+    color: rgb(25, 3, 63);
+    font-size: 1.2em;
+    font-weight: bold; /* Make text bold */
+    padding: 5px 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Align text to the right */
   }
   
+  .player-area h2 {
+    text-align: left;
+  }
+  
+
 .timer {
     font-size: 3rem;
     font-weight: bold;
@@ -179,22 +191,30 @@ body {
 }
 
 .numbers {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
+  margin-top: 20px;
+  display: flex; /* Changed from grid to flex */
+  justify-content: center; /* Centers the items horizontally */
+  align-items: center; /* Centers the items vertically */
+  gap: 5px;
+  border: 4px solid #333;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
+
 .number {
-    height: 50px;
-    border-radius: 10px;
-    background-color: #ecf0f1;
-    color: #024a21;
-    display: grid;
-    place-items: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-    font-weight: 400;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #ecf0f1;
+  color: #024a21;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  font-weight: 400;
+  flex-grow: 1; /* Added to make each number take equal space */
 }
+
 .selected-number {
   background-color: #4CAF50; /* Example: Green background */
   color: white; /* Example: White text */
@@ -208,16 +228,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
-.delete {
-    background-color: #c0392b;
-    color: #ecf0f1;
-    height: 50px;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
 
 #controls {
     text-align: center;
@@ -284,4 +294,173 @@ footer {
 }
 .valid-but-incorrect {
   animation: valid-but-incorrect 1s;
+}
+
+@keyframes enhanced-float-up {
+  0% {
+    transform: translateY(0) scale(1.5);
+    opacity: 1;
+    color: #FFD700; /* Gold color */
+  }
+  50% {
+    color: #4CAF50; /* Green color */
+  }
+  100% {
+    transform: translateY(-50px) scale(1);
+    opacity: 0;
+  }
+}
+.enhanced-floating-points {
+  animation: enhanced-float-up 4.5s ease-out;
+  position: fixed;
+  font-weight: bold;
+  font-size: 1.5em; /* Increased font size */
+  z-index: 10; /* Ensure it's above other elements */
+}
+.win-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #4CAF50; /* Vibrant green background */
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.win-animation {
+  animation: scaleUp 1s forwards;
+}
+
+@keyframes scaleUp {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* Style for the buttons */
+.win-modal button {
+  background-color: #FFD700; /* Gold color */
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.win-modal button:hover {
+  background-color: #FFC107; /* Lighter gold on hover */
+}
+@keyframes fall {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  opacity: 0.7;
+  border-radius: 50%;
+  animation: fall linear;
+}
+
+/* Create multiple instances with different colors, delays, and durations */
+.confetti-piece:nth-child(1) {
+  left: 10%;
+  animation-duration: 1s;
+  background-color: yellow;
+}
+
+.confetti-piece:nth-child(2) {
+  left: 20%;
+  animation-duration: 1.5s;
+  animation-delay: 0.2s;
+  background-color: blue;
+}
+
+.confetti-piece:nth-child(3) {
+  left: 30%;
+  animation-duration: 1.2s;
+  animation-delay: 0.4s;
+  background-color: green;
+}
+
+#initial-page, #sudoku-game {
+  transition: opacity 0.5s ease;
+}
+
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+#initial-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.welcome-message {
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+#start-form {
+  padding: 20px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  max-width: 90%;
+}
+
+#start-form h2, #start-form input[type="text"], #start-form select, #start-form button {
+  margin-bottom: 15px;
+}
+
+#start-form input[type="text"], #start-form select {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+#start-form button {
+  width: 92%;
+  padding: 12px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#start-form button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  #start-form input[type="text"], #start-form select, #start-form button {
+    width: 95%;
+  }
 }

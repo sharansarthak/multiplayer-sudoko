@@ -10,7 +10,11 @@ let players = {
 };
 
 let currentPlayer = "player1";
-
+// Function to set player names
+function setPlayerNames(name1, name2) {
+  players.player1.name = name1;
+  players.player2.name = name2;
+}
 // Import timer functions from timer.js
 import { startTimer, stopTimer } from './timer.js';
 
@@ -51,12 +55,10 @@ function updateScore(playerKey, points) {
 
   if (players[playerKey]) {
     players[playerKey].score += points;
-    console.log(`New score for ${playerKey}: ${players[playerKey].score}`);
-
     const scoreElement = document.getElementById(`${playerKey}-score-value`);
     if (scoreElement) {
       scoreElement.textContent = players[playerKey].score;
-      console.log(`Updated score displayed for ${playerKey}`);
+      createAndShowFloatingPoints(playerKey, points, scoreElement);
     } else {
       console.log(`Score element not found for ${playerKey}`);
     }
@@ -64,6 +66,27 @@ function updateScore(playerKey, points) {
     console.log(`Player object not found for ${playerKey}`);
   }
 }
+  // Helper function to create and show floating points
+// Helper function to create and show floating points
+function createAndShowFloatingPoints(playerKey, points, scoreElement) {
+  // Create new floating points element
+  const floatingPoints = document.createElement('div');
+  floatingPoints.textContent = points >= 0 ? `+${points}` : `${points}`;
+  floatingPoints.className = 'enhanced-floating-points';
+  document.body.appendChild(floatingPoints);
+
+  // Adjust position
+  const rect = scoreElement.getBoundingClientRect();
+  floatingPoints.style.left = `${rect.left}px`;
+  floatingPoints.style.top = `${rect.bottom + 130}px`;
+
+  // Remove after animation
+  setTimeout(() => floatingPoints.remove(), 4000); // Adjust the animation duration here
+}
+
+
+
+
 
 
 
@@ -79,23 +102,20 @@ function togglePlayer() {
 
 document.getElementById("player1-area").classList.toggle('active-player', currentPlayer === "player2");
 document.getElementById("player2-area").classList.toggle('active-player', currentPlayer === "player1");
-
-  console.log(`Current Player before toggle: ${currentPlayer}`);
+ // Logic to show/hide the 'End Turn' buttons
+ document.getElementById("end-turn-player1").style.display = currentPlayer === "player1" ? 'none' : 'block';
+ document.getElementById("end-turn-player2").style.display = currentPlayer === "player2" ? 'none' : 'block';
 
   if (currentPlayer === "player1") {
     stopTimer(players.player1.timeId); // Correctly stopping the current timer
     switchPlayer();
     players.player2.timeId = startTimer("player2", players.player2.timeRemaining); // Storing new interval ID
-    console.log(`Switched to Player 2. Timer ID: ${players.player2.timeId}`);
   } else {
     stopTimer(players.player2.timeId); // Correctly stopping the current timer
     switchPlayer();
     players.player1.timeId = startTimer("player1", players.player1.timeRemaining); // Storing new interval ID
-    console.log(`Switched to Player 1. Timer ID: ${players.player1.timeId}`);
   }
-
-  console.log(`Current Player after toggle: ${currentPlayer}`);
 }
 
 // Exporting the necessary functions and variables
-export { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, getPlayerScore, updatePlayerTimer, players, currentPlayer };
+export { setPlayerNames, switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, getPlayerScore, updatePlayerTimer, players, currentPlayer };
