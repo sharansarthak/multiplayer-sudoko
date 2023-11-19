@@ -27,17 +27,14 @@ function startTimer(playerId, remainingTime) {
 
       if (remaining <= 0) {
           clearInterval(intervalId);
-          if (onTimeUp) onTimeUp(playerId); // Callback when time runs out
+          // Callback when time runs out
       }
   }, 1000); // Run the interval every second
-  console.log(`Starting timer for ${playerId}: Interval ID = ${intervalId}`);
 
   return intervalId;
 }
 
 function stopTimer(intervalId) {
-  console.log(`Stopping timer: Interval ID = ${intervalId}`);
-
   clearInterval(intervalId);
 }
 

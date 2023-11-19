@@ -33,14 +33,6 @@ body {
 
 }
 
-.game-screen {
-    position: relative;
-    height: 100%;
-    min-width: 400px;
-    grid-template-columns: 1fr 3fr 1fr;
-    display: grid;
-    
-}
 
 .main-game {
     display: flex;
@@ -80,13 +72,31 @@ body {
 .selected-number {
     color: blue;
   }
+  .player-area {
+    max-height: 300px; /* Adjust this value based on your content */
+    overflow: auto; /* Adds a scrollbar if content exceeds the max-height */
+    padding: 10px;
+    margin: 0;
+  }
   
-.player-area, .main-game {
-    display: flex;
-    flex-direction: column;
-    padding-left: 20px;
-}
-
+  /* Resets potential inherited styles */
+  .player-area * {
+    margin: 0;
+    padding: 0;
+  }
+  
+  
+  .game-screen {
+    display: flex; /* Using Flexbox for layout */
+    justify-content: space-between; /* Spacing out the main areas */
+  }
+  
+  /* Adjustments to ensure the main game area takes up most of the space */
+  .main-game {
+    flex-grow: 1; /* Allows the main game area to grow and take available space */
+    margin: 0 10px; /* Add margin for spacing */
+  }
+  
 .timer {
     font-size: 3rem;
     font-weight: bold;
@@ -241,4 +251,37 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.player-area {
+  transition: box-shadow 0.5s ease;
+}
+.active-player {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9); /* Soft green glow */
+}
+
+    
+
+@keyframes correct-move {
+  0% { background-color: green; }
+  100% { background-color: transparent; }
+}
+.correct-move {
+  animation: correct-move 1s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%, 75% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+}
+.incorrect-move {
+  animation: shake 0.5s, background-color 0.5s;
+  background-color: red;
+}
+/* CSS */
+@keyframes valid-but-incorrect {
+  0%, 100% { background-color: transparent; }
+  50% { background-color: orange; }
+}
+.valid-but-incorrect {
+  animation: valid-but-incorrect 1s;
 }

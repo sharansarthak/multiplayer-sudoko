@@ -47,12 +47,25 @@ function updatePlayerTimer(playerKey, newTimerValue) {
 
 // Function to update the score of a player
 function updateScore(playerKey, points) {
+  console.log(`Attempting to update score for ${playerKey}. Points to add: ${points}`);
+
   if (players[playerKey]) {
     players[playerKey].score += points;
-    console.log(`${playerKey} score: ${players[playerKey].score}`);
-    // Optionally update the UI here
+    console.log(`New score for ${playerKey}: ${players[playerKey].score}`);
+
+    const scoreElement = document.getElementById(`${playerKey}-score-value`);
+    if (scoreElement) {
+      scoreElement.textContent = players[playerKey].score;
+      console.log(`Updated score displayed for ${playerKey}`);
+    } else {
+      console.log(`Score element not found for ${playerKey}`);
+    }
+  } else {
+    console.log(`Player object not found for ${playerKey}`);
   }
 }
+
+
 
 // Function to get the score of a player
 function getPlayerScore(playerKey) {
@@ -64,17 +77,25 @@ function togglePlayer() {
   const timerElement1 = document.getElementById("player1-timer");
   const timerElement2 = document.getElementById("player2-timer");
 
+document.getElementById("player1-area").classList.toggle('active-player', currentPlayer === "player2");
+document.getElementById("player2-area").classList.toggle('active-player', currentPlayer === "player1");
 
-   if (currentPlayer === "player1") {
+  console.log(`Current Player before toggle: ${currentPlayer}`);
+
+  if (currentPlayer === "player1") {
     stopTimer(players.player1.timeId); // Correctly stopping the current timer
     switchPlayer();
     players.player2.timeId = startTimer("player2", players.player2.timeRemaining); // Storing new interval ID
+    console.log(`Switched to Player 2. Timer ID: ${players.player2.timeId}`);
   } else {
     stopTimer(players.player2.timeId); // Correctly stopping the current timer
     switchPlayer();
     players.player1.timeId = startTimer("player1", players.player1.timeRemaining); // Storing new interval ID
+    console.log(`Switched to Player 1. Timer ID: ${players.player1.timeId}`);
   }
+
+  console.log(`Current Player after toggle: ${currentPlayer}`);
 }
 
 // Exporting the necessary functions and variables
-export { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, getPlayerScore, updatePlayerTimer, players };
+export { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, getPlayerScore, updatePlayerTimer, players, currentPlayer };
