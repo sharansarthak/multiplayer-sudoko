@@ -13,7 +13,7 @@ import { handleWin, resetGame, triggerConfetti } from "./game.js";
 import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, currentPlayer, setPlayerNames, players } from './player.js';
 import { startTimer } from "./timer.js";
 
-const cells = document.querySelectorAll('.sudoku-cell');
+let cells = document.querySelectorAll('.sudoku-cell');
 let selectedCell = null;
 let selectedNumber = null; // Variable to keep track of the selected number
 let gridState; // To keep track of the current Sudoku grid state
@@ -29,6 +29,7 @@ const initGameGrid = (puzzle) => {
     row.forEach((value, colIndex) => {
       const cell = document.createElement('div');
       cell.classList.add('sudoku-cell');
+      cell.style.pointerEvents = 'none';
 
       if (value !== 0) {
         cell.textContent = value;
@@ -83,6 +84,8 @@ const initGameGrid = (puzzle) => {
         }
       });
       gridContainer.appendChild(cell);
+        cells = document.querySelectorAll('.sudoku-cell'); // Make sure this line is here
+
     });
   });
   // Update gridState to reflect the current state of the puzzle
@@ -142,13 +145,26 @@ function initializeGame(playerName1, playerName2, difficulty){
   document.getElementById('player2-name-display').textContent = players.player2.name || 'Player 2';
 
   initGameGrid(generatedPuzzle);
+  document.querySelectorAll('.number').forEach(button => {
+    button.disabled = true;
+  });
 
-  // Event listeners for starting the game and toggling players
   document.getElementById("start-game").addEventListener("click", function () {
     togglePlayer();
+    
+    // Enable number buttons
+    document.querySelectorAll('.number').forEach(button => {
+      button.disabled = false;
+    });
+  
+    // Enable cell click interactions
+    cells.forEach(cell => {
+      cell.style.pointerEvents = 'auto';
+    });
+  
     document.getElementById("start-game").style.display = "none";
-
   });
+  
 
   document.getElementById("end-turn-player1").addEventListener("click", togglePlayer);
   document.getElementById("end-turn-player2").addEventListener("click", togglePlayer);

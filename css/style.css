@@ -137,6 +137,7 @@ body {
     box-sizing: border-box;
     animation: timer 10s linear forwards;
 }
+
 .animate-timer {
     animation: timer 10s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
   }
