@@ -90,8 +90,23 @@ const sudokuCreate = (grid) => {
     return false; // Trigger backtracking
 };
 
-const removeCells = (grid, level) => {
-    let attempts = level;
+const removeCells = (grid, difficulty) => {
+    let attempts;
+
+    switch (difficulty) {
+        case '1': // Easy
+            attempts = 15; // Fewer cells removed for easy level
+            break;
+        case '2': // Medium
+            attempts = 30; // More cells removed for medium level
+            break;
+        case '3': // Hard
+            attempts = 50; // Even more cells removed for hard level
+            break;
+        default:
+            attempts = 20; // Default to easy if difficulty is undefined or unexpected
+    }
+
     while (attempts > 0) {
         let row = Math.floor(Math.random() * GRID_SIZE);
         let col = Math.floor(Math.random() * GRID_SIZE);
@@ -101,6 +116,7 @@ const removeCells = (grid, level) => {
         }
     }
 };
+
 
 const sudokuCreateAndStoreSolution = (grid) => {
   sudokuCreate(grid);

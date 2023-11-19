@@ -132,12 +132,13 @@ document.getElementById('start-form').addEventListener('submit', (event) => {
   // Hide initial form and show the Sudoku board
   document.getElementById('initial-page').style.display = 'none';
   document.getElementById('game-screen').style.display = 'flex';
+  
   initializeGame(playerName1, playerName2, difficulty);
 
 });
 
 function initializeGame(playerName1, playerName2, difficulty){  
-  let generatedPuzzle = generateSudokuPuzzle(1);
+  let generatedPuzzle = generateSudokuPuzzle(difficulty);
   initializePlayers();
   setPlayerNames(playerName1, playerName2);
 
