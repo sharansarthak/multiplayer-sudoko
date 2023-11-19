@@ -15,12 +15,16 @@ export function handleWin(winningPlayer) {
   // Trigger confetti or particle effects
   triggerConfetti();
 }
-
-function triggerConfetti() {
+// Function to reset the game
+export function resetGame() {
+  // Reload the page to restart the whole game
+  location.reload();
+}
+export function triggerConfetti() {
   const confettiContainer = document.createElement('div');
   confettiContainer.className = 'confetti-container';
 
-  for (let i = 0; i < 10; i++) { // 10 pieces of confetti
+  for (let i = 0; i < 100; i++) { // 10 pieces of confetti
     const confettiPiece = document.createElement('div');
     confettiPiece.className = 'confetti-piece';
     confettiContainer.appendChild(confettiPiece);
@@ -29,7 +33,7 @@ function triggerConfetti() {
   document.body.appendChild(confettiContainer);
 
   // Remove confetti after it falls
-  setTimeout(() => confettiContainer.remove(), 2000); // Duration should match longest confetti animation
+  setTimeout(() => confettiContainer.remove(), 8000); // Duration should match longest confetti animation
 }
 
 function showWinModal(message) {
@@ -37,7 +41,7 @@ function showWinModal(message) {
   modal.className = 'win-modal';
   modal.innerHTML = `
     <h2>${message}</h2>
-    <button onclick="restartGame()">Play Again</button>
+    <button onclick="location.reload()">Play Again</button>
     <button onclick="returnToMainMenu()">Main Menu</button>`;
   document.body.appendChild(modal);
 }

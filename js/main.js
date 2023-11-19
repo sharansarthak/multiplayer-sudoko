@@ -9,7 +9,7 @@
  */
 
 import { canPlaceNumber, generateSudokuPuzzle, isBoardSolved, isCorrectPlacement } from "./board.js";
-import { handleWin } from "./game.js";
+import { handleWin, resetGame, triggerConfetti } from "./game.js";
 import { switchPlayer, getCurrentPlayer, initializePlayers, updateScore, togglePlayer, currentPlayer, setPlayerNames, players } from './player.js';
 import { startTimer } from "./timer.js";
 
@@ -58,6 +58,7 @@ const initGameGrid = (puzzle) => {
               gridState[rowIndex][colIndex] = selectedNumber;
               if (isCorrectPlacement(gridState, rowIndex, colIndex, selectedNumber)) {
                 updateScore(currentPlayer, 100);
+                triggerConfetti();
                 console.log("Correct placement!");
                 selectedCell.classList.add('correct-move');
                 setTimeout(() => selectedCell.classList.remove('correct-move'), 1000);
@@ -75,7 +76,7 @@ const initGameGrid = (puzzle) => {
               setTimeout(() => selectedCell.classList.remove('incorrect-move'), 500);
             }
             if (isBoardSolved(gridState)) {
-              handleWin(getCurrentPlayer); // Handle the win scenario
+              handleWin(getCurrentPlayer()); // Handle the win scenario
             }
             togglePlayer();
           }
@@ -91,6 +92,11 @@ const initGameGrid = (puzzle) => {
 let interval1, interval2;
 let time1 = 600, time2 = 600;  // Initialize remaining time for both players
 let isFirstStart = true;  // Initialize a variable to track the first start
+
+
+document.getElementById('end-turn-player1').style.display = 'none';
+document.getElementById('end-turn-player2').style.display = 'none';
+document.getElementById('reset-game').addEventListener('click', resetGame);
 
 
 
@@ -139,7 +145,9 @@ function initializeGame(playerName1, playerName2, difficulty){
 
   // Event listeners for starting the game and toggling players
   document.getElementById("start-game").addEventListener("click", function () {
-    interval1 = startTimer("player1", time1);
+    togglePlayer();
+    document.getElementById("start-game").style.display = "none";
+
   });
 
   document.getElementById("end-turn-player1").addEventListener("click", togglePlayer);

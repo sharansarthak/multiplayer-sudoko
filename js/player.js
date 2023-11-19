@@ -9,7 +9,7 @@ let players = {
   player2: { name: "Player 2", color: "pink", score: 0, timeId: null, timeRemaining: 600 }
 };
 
-let currentPlayer = "player1";
+let currentPlayer = "player2";
 // Function to set player names
 function setPlayerNames(name1, name2) {
   players.player1.name = name1;
